@@ -12,10 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.KMoskvitin.myassistent.app.mapper.CursorMapper;
 
 import java.text.SimpleDateFormat;
@@ -28,15 +25,19 @@ public class MainActivity extends ListActivity {
     private List<User> userList = new ArrayList<User>();
     private SQLiteDatabase db;
 
-    private String anecdote = getString(R.string.anecdote);
-    private String weather = getString(R.string.weather);
-    private String currency = getString(R.string.currency);
+    private String anecdote;
+    private String weather;
+    private String currency;
     private Calendar calendar;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH.MM.SS, DD.MM.YYYY");
+    private SimpleDateFormat dateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        anecdote = getString(R.string.anecdote);
+        weather = getString(R.string.weather);
+        currency = getString(R.string.currency);
+        dateFormat = new SimpleDateFormat("HH.mm.ss, dd.MM.yyyy");
         setContentView(R.layout.activity_main);
 
         final EditText editText = (EditText) findViewById(R.id.message);
@@ -57,7 +58,7 @@ public class MainActivity extends ListActivity {
                     public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                         for (int position : reverseSortedPositions) {
                             String[] deleteItemTime = new String[1];
-                            deleteItemTime[0] = adapter.getItem(position).getTime();
+                            deleteItemTime[0] = adapter.getItem(position).getChatTime();
                             adapter.remove(adapter.getItem(position));
                             db.delete("chat", "chatTime = ?", deleteItemTime);
                             Toast.makeText(MainActivity.this, "Message deleted.", Toast.LENGTH_SHORT).show();
@@ -77,23 +78,23 @@ public class MainActivity extends ListActivity {
             userList.addAll(dBList);
             Log.i(Const.LOG_TAG, "Size of userList " + userList.size());
         }
-
-        String sysMessage = "Enter \"" + currency + "\" to " +
-                "know the exchange rate in PrivatBank\n" +
-                "Enter \"" + anecdote + "\" bot to show you a random anecdote.\n" +
-                "Enter \"" + weather + "\" to see the actual weather.";
-        userList.add(new User(Const.TYPE_SYSTEM, sysMessage, getTimeString()));
+//
+//        String sysMessage = "Enter \"" + currency + "\" to " +
+//                "know the exchange rate in PrivatBank\n" +
+//                "Enter \"" + anecdote + "\" bot to show you a random anecdote.\n" +
+//                "Enter \"" + weather + "\" to see the actual weather.";
+//        userList.add(new User(Const.TYPE_SYSTEM, sysMessage, getTimeString()));
 
         adapter.notifyDataSetChanged();
 
-        ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
+        ImageView sendButton = (ImageView) findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.CUPCAKE)
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().trim().length() != 0) {
                     userList.add(new User(Const.TYPE_USER, editText.getText().toString(), getTimeString()));
-                    addToDb(Const.TYPE_USER, editText.getText().toString(), "", userList.get(userList.size() - 1).getTime());
+                    addToDb(Const.TYPE_USER, editText.getText().toString(), "", userList.get(userList.size() - 1).getChatTime());
                 }
 
                 final String message = editText.getText().toString();
@@ -118,7 +119,7 @@ public class MainActivity extends ListActivity {
 
                             @Override
                             protected void onPostExecute(User user) {
-                                addToDb(user.getType(), user.getMessage(), user.getImage(), user.getTime());
+                                addToDb(user.getType(), user.getMessage(), user.getImageId(), user.getChatTime());
                                 userList.add(user);
                                 adapter.notifyDataSetChanged();
                             }

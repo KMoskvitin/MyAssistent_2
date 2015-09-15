@@ -4,18 +4,21 @@ public class User {
 
     int type;
     String message;
-    String time;
-    String image;
+    String chatTime;
+    String imageId;
 
-    public User(int type, String message, String time, String image) {
+    public User(int type, String message, String chatTime, String imageId) {
         this.type = type;
         this.message = message;
-        this.time = time;
-        this.image = image;
+        this.chatTime = chatTime;
+        this.imageId = imageId;
     }
 
-    public User(int typeSystem, String sysMessage, String timeString) {
-
+    public User(int type, String message, String chatTime) {
+        this.type = type;
+        this.message = message;
+        this.chatTime = chatTime;
+        this.imageId = "";
     }
 
     public int getType() {
@@ -26,12 +29,12 @@ public class User {
         return message;
     }
 
-    public String getTime() {
-        return time;
+    public String getChatTime() {
+        return chatTime;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageId() {
+        return imageId;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class User {
         return "User{" +
                 "type=" + type +
                 ", message='" + message + '\'' +
-                ", time='" + time + '\'' +
+                ", chatTime='" + chatTime + '\'' +
                 '}';
     }
 }

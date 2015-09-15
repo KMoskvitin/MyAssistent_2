@@ -1,7 +1,7 @@
 package com.KMoskvitin.myassistent.app;
 
 public class Const {
-    public static final int TYPE_SYSTEM = 0;
+    public static final int TYPE_SYSTEM = 1;
     public static final int TYPE_USER = 1;
     public static final int TYPE_BOT = 2;
     public static final int TYPE_WEATHER = 3;
